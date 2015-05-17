@@ -159,20 +159,13 @@ nds <- x
 #// interval.list, v2$ave.steps contain the values we want to swap
 # create a boolean vector using which to find all the NAs (they're all in steps)
 
-#nds$steps[is.na(nds$steps)]<- value
-
-bStepsNA <- sapply(nds$steps, function(abc) {is.na(abc)})
-str(bStepsNA)
-
-#is.na(nds$steps)[bStepsNA]<-v2$ave.steps[bStepsNA]
-
-# find the indices of those elements, because they're the ones we need to change
-indices <-  which(bStepsNA)
-str(indices)
-
-## then change those values to the means calcluated in v2 above
-foo<-sapply(indices, function(abc) { nds$steps[is.na(nds$steps[abc])] <- v2$ave.steps[abc] })
-#foo
+replaceNAs <- function(v1, v2)
+{ 
+    if(is.na(v1)) {v1 <- v2}
+    else          {v1 <- v1}
+}
+  
+nds$steps<- mapply(replaceNAs, nds$steps, v2$ave.steps) 
 
 nds$steps
 
