@@ -1,12 +1,6 @@
----
-title: 'Reproducible Research: Peer Assessment 1'
-author: "Jennifer Teed"
-date: "June 7, 2015"
-output:
-  html_document:
-    keep_md: yes
-    self_contained: false
----
+# Reproducible Research: Peer Assessment 1
+Jennifer Teed  
+June 7, 2015  
 
 This assignment answers a number of questions about the Activity Monitoring Data dataset (included in
 the git repository).  Below I document the questions as well as the steps taken to answer them.
@@ -15,7 +9,8 @@ Because I used RStudio, the knitr package was built into the environment.
 ## Loading and preprocessing the data
 
 
-```{r}
+
+```r
 # save all images to the figures directory
 
 # unzip the file
@@ -28,7 +23,6 @@ df<- read.csv("activity.csv", na.strings="NA",
 
 #used to report the number of observations in the dataset below.
 len <- length(df$date)
-
 ```
 
 The variables included in this dataset are:
@@ -41,9 +35,10 @@ The variables included in this dataset are:
 
   * interval: Identifier for the 5-minute interval in which measurement was taken
 
-The dataset is stored in a comma-separated-value (CSV) file and there are a total of `r len` observations in this dataset.
+The dataset is stored in a comma-separated-value (CSV) file and there are a total of 17568 observations in this dataset.
 
-```{r} 
+
+```r
 # take a peek at the data to verify it loaded properly
 #head(df)
 ```
@@ -54,7 +49,8 @@ For this part of the assignment, I ignore the missing values in the dataset.
 
 ###1.Calculate the total number of steps taken per day.
 
-```{r}
+
+```r
 # Calculate the number of steps taken, per day, and put the answers into a vector.
 v <- aggregate(df[, 1],list(df$date), sum, na.rm=TRUE)
 colnames(v) <- c("date", "total.steps")
@@ -64,36 +60,44 @@ The total number of steps taken per day is in v$total.steps.
 
 ###2.Make a histogram of the total number of steps taken each day.
 
-```{r}
+
+```r
 hist(v[ , 2], 
      breaks=10, 
      xlab="Total Steps Reported in the Day", 
      main="Histogram of total number of steps taken each day")
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+
 From this data we can see, that for about half of the days in the reporting period, the person took between ten and fifteen thousand steps per day.
 
 
 ###3.Calculate and report the mean and median of the total number of steps taken per day
 
-```{r}
+
+```r
 # You could use summary here instead to get the answers, but then you can't plug the answers back into the 
 # text below. Doing both here to double check answers
 summary(v$total.steps)[c(3,4)]
+```
 
+```
+## Median   Mean 
+##  10400   9354
+```
+
+```r
 meanVal <- signif(mean(v[ , 2]), 4 )
 medianVal <- median(v[ , 2])
 ```
 
 
-```{r echo=FALSE, results='hide'}
-#free up some space
-v<-NULL
-```
 
-The mean total number steps taken per day is:  *`r meanVal`*.
 
-The median total number steps taken per day is:  *`r medianVal`*.
+The mean total number steps taken per day is:  *9354*.
+
+The median total number steps taken per day is:  *10395*.
 
 The difference between my computed values and the values reported by summary are due to rounding and/or signifiant digits.
 
@@ -102,7 +106,8 @@ The difference between my computed values and the values reported by summary are
 
 ###1.Make a time series plot (i.e.  type = "l" ) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
-```{r}
+
+```r
 # save the intervals as a unique list, similar to a factor, for later use
 # the format of the interval is HHMM, in 5 minute increments, so 100 is 1 hour, 0 minutes
 interval.list <- unique(df$interval)
@@ -119,9 +124,12 @@ plot(v2$interval,
      main="Average Daily Activity")
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
+
 ###2.Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
-```{r}
+
+```r
 ## find the index of the max value of the vector above
 index <-  which.max(v2$ave.steps)
 
@@ -133,9 +141,9 @@ maxVal<-signif(max(v2$ave.steps), 3)
 ```
 
 
-The interval across all days which contains the maximum average number of steps is *`r interval`*.
+The interval across all days which contains the maximum average number of steps is *835*.
 
-The value of the average number of steps taken during that interval (across all days) is *`r maxVal`*.
+The value of the average number of steps taken during that interval (across all days) is *206*.
 
 
 ## Imputing missing values
@@ -143,10 +151,11 @@ The value of the average number of steps taken during that interval (across all 
 There are a number of days/intervals where there are missing values (coded as NA). The presence of missing days may introduce bias into some calculations or summaries of the data.
 
 ###1.Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
-```{r}
+
+```r
 rows.missing.data<-sum(is.na(df))
 ```
-There are `r rows.missing.data` rows with missing values in the dataset.
+There are 2304 rows with missing values in the dataset.
 
 ###2.Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
 
@@ -155,7 +164,8 @@ created a new column filled with the average associated with the interval for th
 
 
 ###3.Create a new dataset that is equal to the original dataset but with the missing data filled in.
-```{r}
+
+```r
 #find the indices where steps is NA
 na.indices <-which(is.na(df$steps))
 
@@ -169,15 +179,38 @@ temp <- join(df, v2, by="interval", type="left", match="all")
 
 
 length(temp$steps)
+```
+
+```
+## [1] 17568
+```
+
+```r
 length(temp$ave.steps)
+```
+
+```
+## [1] 17568
+```
+
+```r
 max(na.indices)
+```
+
+```
+## [1] 17568
+```
+
+```r
 temp$steps <- replace(temp$steps, na.indices, temp$ave.steps)
 ```
 
-```{r echo=FALSE, results='hide'}
-#free up some more space
-df <- NULL
 ```
+## Warning in replace(temp$steps, na.indices, temp$ave.steps): number of items
+## to replace is not a multiple of replacement length
+```
+
+
 
 Although R generates a warning with the above code, the computation is ok because the length of both steps and ave.steps are equal and the maximum index in na.index (used to decide which indices to
 replace) is the size of both arrays (thus not going beyond the end of the buffer.).
@@ -188,18 +221,30 @@ replace) is the size of both arrays (thus not going beyond the end of the buffer
 Do these values differ from the estimates from the first part of the assignment? 
 What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
-```{r}
+
+```r
 # Calculate the number of steps taken, per day, and put the answers into a vector.
 v3 <- aggregate(temp[, 1],list(temp$date), sum)  # na.rm is not needed, there are no more NAs.
 colnames(v3) <- c("date", "total.steps")
 
 hist(v3[ , 2], breaks=10, ylab="Frequency of occurance", xlab="Total Steps Reported in the Day (with imputed data)", 
   main="Histogram of total number of steps taken each day (with imputed data)")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-12-1.png) 
+
+```r
 # You could use summary here instead to get the answers, but then you can't plug the answers back into the 
 # text below. Doing both here to double check answers
 summary(v3$total.steps)[c(3,4)]
+```
 
+```
+## Median   Mean 
+##  10770  10770
+```
+
+```r
 # don't display results in scientific notation
 options(scipen=999)
 
@@ -212,15 +257,15 @@ median.diff <- medianVal - new.medianVal
 
 Mean:
 
-The mean total number steps taken per day is:  *`r new.meanVal`*.
+The mean total number steps taken per day is:  *10770*.
 
-The difference between this value (computed with imputed data) and the original (with NAs removed) is: *`r mean.diff `*.
+The difference between this value (computed with imputed data) and the original (with NAs removed) is: *-1416*.
 
 Median:
 
-The median total number steps taken per day is:  *`r new.medianVal`*.
+The median total number steps taken per day is:  *10770*.
 
-The difference between this value (computed with imputed data) and the original (with NAs removed) is: *`r median.diff `*.
+The difference between this value (computed with imputed data) and the original (with NAs removed) is: *-375*.
 
 This shows that imputing the data increases the average and median number of steps results.  Using this data in further calculations is more reasonable than using zeros as the data for the NA time periods, as it is  more likely the device was turned off than that the person did not take any steps during those times.
 
@@ -228,9 +273,10 @@ This shows that imputing the data increases the average and median number of ste
 ## Are there differences in activity patterns between weekdays and weekends?
 The dataset with the filled-in missing values is used for this part.
 
-###1.Create a new factor variable in the dataset with two levels, weekday and weekend, Äù indicating whether a given date is a weekday or weekend day.
+###1.Create a new factor variable in the dataset with two levels, weekday and weekend, <U+0080>¬ù indicating whether a given date is a weekday or weekend day.
 
-```{r}
+
+```r
 #Continue to use x, with the imputed values.
 temp$day<- weekdays(temp$date)
 
@@ -250,18 +296,40 @@ is.day.factor <- is.factor(temp$day)
 day.levels <- levels(temp$day)
 ```
 
-The statement, "The day variable in the dataset is a factor." is `r is.day.factor`.
-The levels for the variable are `r day.levels`.
+The statement, "The day variable in the dataset is a factor." is TRUE.
+The levels for the variable are Weekday, Weekend.
 
 
 ###2.Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). See the README file in the GitHub repository to see an example of what this plot should look like using simulated data.
 
 
 
-```{r}
+
+```r
 temp$ave.steps <- NULL
 
 library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+## 
+## The following objects are masked from 'package:plyr':
+## 
+##     arrange, count, desc, failwith, id, mutate, rename, summarise,
+##     summarize
+## 
+## The following object is masked from 'package:stats':
+## 
+##     filter
+## 
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
 # calculate the NEW mean steps per interval (per day), based on the updated data, 
 temp<-ddply(temp, .(interval, day), mutate, ave.steps = mean(steps))
 
@@ -277,41 +345,10 @@ myplot <-xyplot(ave.steps ~ interval | day,
 print(myplot)
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-14-1.png) 
+
 With these plots we can see several things.  First, the early daylight hours are, on average, the times of most consistent activity whether on the weekend or weekdays.  Secondly, the data shows that on work days activity drops considerably during the day compared to the weekend days where activity seems to be more consistent throughout the day. 
 
-```{r install2, echo=FALSE, results='hide'}
 
-# This section was for figuring out how to plot this using the 
-# base graphing & plotting system.  I'm saving it for future reference,
-# but none of it is actually used in the assignment.
-
-# for each level (weekday & weekend), compute updated averages
-# Calculate the number of steps taken, per interval, and put the answers into a vector.
-#v.weekday <- aggregate(weekday.data$steps, list(weekday.data$interval), mean)  # na.rm is not needed.
-#colnames(v.weekday) <- c("interval", "ave.steps")
-
-# Calculate the number of steps taken, per interval, and put the answers into a vector.
-#v.weekend <- aggregate(weekend.data$steps,list(weekend.data$interval), mean)  # na.rm is not needed.
-#colnames(v.weekend) <- c("interval", "ave.steps")
-
-#don't echo the code, and don't print out the results
-# The following code  was used whwne I was using the base level graphics pkg, rather than
-# {lattice} to graph the plots
-
-# Save the old layout (whatever it might've been)
-#old.par<- par(mfrow=c(2,1))  # two rows, one column
-
-# Weekend plot
-#plot(v.weekend$ave.steps ~ v.weekend$interval, type="l", xlab="Interval", ylab="Average Steps", 
-#     main= "Weekend Daily Activity")
-
-# Weekday plot
-#plot(v.weekday$ave.steps ~ v.weekday$interval, type="l", xlab="Interval",  ylab="Average steps", 
-#     main="Weekday Daily Activity")
-
-# Restore the old layout, and close the graphics device.
-#par(old.par)
-#dev.off()
-```
 
 ## End of document
