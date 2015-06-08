@@ -167,7 +167,7 @@ created a new column filled with the average associated with the interval for th
 
 ```r
 #find the indices where steps is NA
-na.indices <-which(is.na(df$steps))
+#na.indices <-which(is.na(df$steps))
 
 # then, using plyr, add the average steps for the interval as a column to the original data set,
 # storing the result in temp
@@ -176,44 +176,20 @@ library(plyr)
 temp <- join(df, v2, by="interval", type="left", match="all")
 
 # go through the vector and if $steps is.NA, replace it with $ave.steps
+temp <- mutate(temp, steps = ifelse(is.na(temp$steps), temp$ave.steps, temp$steps))
 
-
-length(temp$steps)
-```
-
-```
-## [1] 17568
-```
-
-```r
-length(temp$ave.steps)
-```
-
-```
-## [1] 17568
-```
-
-```r
-max(na.indices)
-```
-
-```
-## [1] 17568
-```
-
-```r
-temp$steps <- replace(temp$steps, na.indices, temp$ave.steps)
-```
-
-```
-## Warning in replace(temp$steps, na.indices, temp$ave.steps): number of items
-## to replace is not a multiple of replacement length
+#Although R generates a warning with the code below, it's equivalent to the code above.
+#This is because the length of both steps and ave.steps are equal and the maximum index in
+#na.index (used to decide which indices to replace) is the size of both arrays (thus not going
+#beyond the end of any of the buffers.).
+ 
+#length(temp$steps)
+#length(temp$ave.steps)
+#max(na.indices)
+#temp$steps <- replace(temp$steps, na.indices, temp$ave.steps)
 ```
 
 
-
-Although R generates a warning with the above code, the computation is ok because the length of both steps and ave.steps are equal and the maximum index in na.index (used to decide which indices to
-replace) is the size of both arrays (thus not going beyond the end of the buffer.).
 
 
 ###4.Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. 

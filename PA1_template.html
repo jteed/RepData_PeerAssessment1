@@ -176,7 +176,7 @@ maxVal&lt;-signif(max(v2$ave.steps), 3)</code></pre>
 <div id="create-a-new-dataset-that-is-equal-to-the-original-dataset-but-with-the-missing-data-filled-in." class="section level3">
 <h3>3.Create a new dataset that is equal to the original dataset but with the missing data filled in.</h3>
 <pre class="r"><code>#find the indices where steps is NA
-na.indices &lt;-which(is.na(df$steps))
+#na.indices &lt;-which(is.na(df$steps))
 
 # then, using plyr, add the average steps for the interval as a column to the original data set,
 # storing the result in temp
@@ -185,18 +185,17 @@ library(plyr)
 temp &lt;- join(df, v2, by=&quot;interval&quot;, type=&quot;left&quot;, match=&quot;all&quot;)
 
 # go through the vector and if $steps is.NA, replace it with $ave.steps
+temp &lt;- mutate(temp, steps = ifelse(is.na(temp$steps), temp$ave.steps, temp$steps))
 
-
-length(temp$steps)</code></pre>
-<pre><code>## [1] 17568</code></pre>
-<pre class="r"><code>length(temp$ave.steps)</code></pre>
-<pre><code>## [1] 17568</code></pre>
-<pre class="r"><code>max(na.indices)</code></pre>
-<pre><code>## [1] 17568</code></pre>
-<pre class="r"><code>temp$steps &lt;- replace(temp$steps, na.indices, temp$ave.steps)</code></pre>
-<pre><code>## Warning in replace(temp$steps, na.indices, temp$ave.steps): number of items
-## to replace is not a multiple of replacement length</code></pre>
-<p>Although R generates a warning with the above code, the computation is ok because the length of both steps and ave.steps are equal and the maximum index in na.index (used to decide which indices to replace) is the size of both arrays (thus not going beyond the end of the buffer.).</p>
+#Although R generates a warning with the code below, it&#39;s equivalent to the code above.
+#This is because the length of both steps and ave.steps are equal and the maximum index in
+#na.index (used to decide which indices to replace) is the size of both arrays (thus not going
+#beyond the end of any of the buffers.).
+ 
+#length(temp$steps)
+#length(temp$ave.steps)
+#max(na.indices)
+#temp$steps &lt;- replace(temp$steps, na.indices, temp$ave.steps)</code></pre>
 </div>
 <div id="make-a-histogram-of-the-total-number-of-steps-taken-each-day-and-calculate-and-report-the-mean-and-median-total-number-of-steps-taken-per-day." class="section level3">
 <h3>4.Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day.</h3>
