@@ -1,6 +1,6 @@
 # Reproducible Research: Peer Assessment 1
 Jennifer Teed  
-June 7, 2015  
+October 11, 2015  
 
 This assignment answers a number of questions about the Activity Monitoring Data dataset (included in
 the git repository).  Below I document the questions as well as the steps taken to answer them.
@@ -12,6 +12,7 @@ Because I used RStudio, the knitr package was built into the environment.
 
 ```r
 # save all images to the figures directory
+knitr::opts_chunk$set(fig.path='figures/')
 
 # unzip the file
 file <- unzip("activity.zip")
@@ -68,7 +69,7 @@ hist(v[ , 2],
      main="Histogram of total number of steps taken each day")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+![](figures/Histogram_total_steps_per_day-1.png) 
 
 From this data we can see, that for about half of the days in the reporting period, the person took between ten and fifteen thousand steps per day.
 
@@ -124,7 +125,7 @@ plot(v2$interval,
      main="Average Daily Activity")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
+![](figures/Average_Daily_Activity-1.png) 
 
 ###2.Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
@@ -207,7 +208,7 @@ hist(v3[ , 2], breaks=10, ylab="Frequency of occurance", xlab="Total Steps Repor
   main="Histogram of total number of steps taken each day (with imputed data)")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-12-1.png) 
+![](figures/Histogram_With_Imputed_Data-1.png) 
 
 ```r
 # You could use summary here instead to get the answers, but then you can't plug the answers back into the 
@@ -249,7 +250,7 @@ This shows that imputing the data increases the average and median number of ste
 ## Are there differences in activity patterns between weekdays and weekends?
 The dataset with the filled-in missing values is used for this part.
 
-###1.Create a new factor variable in the dataset with two levels, weekday and weekend, <U+0080> indicating whether a given date is a weekday or weekend day.
+###1.Create a new factor variable in the dataset with two levels, weekday and weekend, ?? indicating whether a given date is a weekday or weekend day.
 
 
 ```r
@@ -321,7 +322,7 @@ myplot <-xyplot(ave.steps ~ interval | day,
 print(myplot)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-14-1.png) 
+![](figures/Time_Series_Comparison_Weekday_vs_Weekend-1.png) 
 
 With these plots we can see several things.  First, the early daylight hours are, on average, the times of most consistent activity whether on the weekend or weekdays.  Secondly, the data shows that on work days activity drops considerably during the day compared to the weekend days where activity seems to be more consistent throughout the day. 
 

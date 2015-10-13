@@ -10,6 +10,7 @@
 
 <meta name="author" content="Jennifer Teed" />
 
+<meta name="date" content="2015-10-11" />
 
 <title>Reproducible Research: Peer Assessment 1</title>
 
@@ -65,7 +66,7 @@ img {
 <div id="header">
 <h1 class="title">Reproducible Research: Peer Assessment 1</h1>
 <h4 class="author"><em>Jennifer Teed</em></h4>
-<h4 class="date"><em>June 7, 2015</em></h4>
+<h4 class="date"><em>October 11, 2015</em></h4>
 </div>
 
 
@@ -73,6 +74,7 @@ img {
 <div id="loading-and-preprocessing-the-data" class="section level2">
 <h2>Loading and preprocessing the data</h2>
 <pre class="r"><code># save all images to the figures directory
+knitr::opts_chunk$set(fig.path=&#39;figures/&#39;)
 
 # unzip the file
 file &lt;- unzip(&quot;activity.zip&quot;)
@@ -110,7 +112,7 @@ colnames(v) &lt;- c(&quot;date&quot;, &quot;total.steps&quot;)</code></pre>
      breaks=10, 
      xlab=&quot;Total Steps Reported in the Day&quot;, 
      main=&quot;Histogram of total number of steps taken each day&quot;)</code></pre>
-<p><img src="PA1_template_files/figure-html/unnamed-chunk-4-1.png" /></p>
+<p><img src="figures/Histogram_total_steps_per_day-1.png" /></p>
 <p>From this data we can see, that for about half of the days in the reporting period, the person took between ten and fifteen thousand steps per day.</p>
 </div>
 <div id="calculate-and-report-the-mean-and-median-of-the-total-number-of-steps-taken-per-day" class="section level3">
@@ -145,7 +147,7 @@ plot(v2$interval,
      ylab=&quot;Average steps taken&quot;, 
      xlab=&quot;Interval&quot;,      
      main=&quot;Average Daily Activity&quot;)</code></pre>
-<p><img src="PA1_template_files/figure-html/unnamed-chunk-7-1.png" /></p>
+<p><img src="figures/Average_Daily_Activity-1.png" /></p>
 </div>
 <div id="which-5-minute-interval-on-average-across-all-the-days-in-the-dataset-contains-the-maximum-number-of-steps" class="section level3">
 <h3>2.Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?</h3>
@@ -206,7 +208,7 @@ colnames(v3) &lt;- c(&quot;date&quot;, &quot;total.steps&quot;)
 
 hist(v3[ , 2], breaks=10, ylab=&quot;Frequency of occurance&quot;, xlab=&quot;Total Steps Reported in the Day (with imputed data)&quot;, 
   main=&quot;Histogram of total number of steps taken each day (with imputed data)&quot;)</code></pre>
-<p><img src="PA1_template_files/figure-html/unnamed-chunk-12-1.png" /></p>
+<p><img src="figures/Histogram_With_Imputed_Data-1.png" /></p>
 <pre class="r"><code># You could use summary here instead to get the answers, but then you can&#39;t plug the answers back into the 
 # text below. Doing both here to double check answers
 summary(v3$total.steps)[c(3,4)]</code></pre>
@@ -233,7 +235,7 @@ median.diff &lt;- medianVal - new.medianVal</code></pre>
 <h2>Are there differences in activity patterns between weekdays and weekends?</h2>
 <p>The dataset with the filled-in missing values is used for this part.</p>
 <div id="create-a-new-factor-variable-in-the-dataset-with-two-levels-weekday-and-weekend-indicating-whether-a-given-date-is-a-weekday-or-weekend-day." class="section level3">
-<h3>1.Create a new factor variable in the dataset with two levels, weekday and weekend, <U+0080> indicating whether a given date is a weekday or weekend day.</h3>
+<h3>1.Create a new factor variable in the dataset with two levels, weekday and weekend, ?? indicating whether a given date is a weekday or weekend day.</h3>
 <pre class="r"><code>#Continue to use x, with the imputed values.
 temp$day&lt;- weekdays(temp$date)
 
@@ -286,7 +288,7 @@ myplot &lt;-xyplot(ave.steps ~ interval | day,
                 ylab=&quot;Average Steps&quot;,
                 layout=c(1, 2) )
 print(myplot)</code></pre>
-<p><img src="PA1_template_files/figure-html/unnamed-chunk-14-1.png" /></p>
+<p><img src="figures/Time_Series_Comparison_Weekday_vs_Weekend-1.png" /></p>
 <p>With these plots we can see several things. First, the early daylight hours are, on average, the times of most consistent activity whether on the weekend or weekdays. Secondly, the data shows that on work days activity drops considerably during the day compared to the weekend days where activity seems to be more consistent throughout the day.</p>
 </div>
 </div>

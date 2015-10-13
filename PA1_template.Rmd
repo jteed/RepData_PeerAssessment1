@@ -1,7 +1,7 @@
 ---
 title: 'Reproducible Research: Peer Assessment 1'
 author: "Jennifer Teed"
-date: "June 7, 2015"
+date: "October 11, 2015"
 output:
   html_document:
     keep_md: yes
@@ -17,6 +17,7 @@ Because I used RStudio, the knitr package was built into the environment.
 
 ```{r}
 # save all images to the figures directory
+knitr::opts_chunk$set(fig.path='figures/')
 
 # unzip the file
 file <- unzip("activity.zip")
@@ -64,7 +65,7 @@ The total number of steps taken per day is in v$total.steps.
 
 ###2.Make a histogram of the total number of steps taken each day.
 
-```{r}
+```{r Histogram_total_steps_per_day}
 hist(v[ , 2], 
      breaks=10, 
      xlab="Total Steps Reported in the Day", 
@@ -102,7 +103,7 @@ The difference between my computed values and the values reported by summary are
 
 ###1.Make a time series plot (i.e.  type = "l" ) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
-```{r}
+```{r Average_Daily_Activity}
 # save the intervals as a unique list, similar to a factor, for later use
 # the format of the interval is HHMM, in 5 minute increments, so 100 is 1 hour, 0 minutes
 interval.list <- unique(df$interval)
@@ -121,7 +122,7 @@ plot(v2$interval,
 
 ###2.Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
-```{r}
+```{r Interval_With_Max_Steps}
 ## find the index of the max value of the vector above
 index <-  which.max(v2$ave.steps)
 
@@ -155,7 +156,7 @@ created a new column filled with the average associated with the interval for th
 
 
 ###3.Create a new dataset that is equal to the original dataset but with the missing data filled in.
-```{r}
+```{r Imputing_Data}
 #find the indices where steps is NA
 #na.indices <-which(is.na(df$steps))
 
@@ -190,7 +191,7 @@ df <- NULL
 Do these values differ from the estimates from the first part of the assignment? 
 What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
-```{r}
+```{r Histogram_With_Imputed_Data}
 # Calculate the number of steps taken, per day, and put the answers into a vector.
 v3 <- aggregate(temp[, 1],list(temp$date), sum)  # na.rm is not needed, there are no more NAs.
 colnames(v3) <- c("date", "total.steps")
@@ -230,9 +231,9 @@ This shows that imputing the data increases the average and median number of ste
 ## Are there differences in activity patterns between weekdays and weekends?
 The dataset with the filled-in missing values is used for this part.
 
-###1.Create a new factor variable in the dataset with two levels, weekday and weekend, € indicating whether a given date is a weekday or weekend day.
+###1.Create a new factor variable in the dataset with two levels, weekday and weekend, ?? indicating whether a given date is a weekday or weekend day.
 
-```{r}
+```{r Factored_Weekday_vs_Weekend}
 #Continue to use x, with the imputed values.
 temp$day<- weekdays(temp$date)
 
@@ -260,7 +261,7 @@ The levels for the variable are `r day.levels`.
 
 
 
-```{r}
+```{r Time_Series_Comparison_Weekday_vs_Weekend}
 temp$ave.steps <- NULL
 
 library(dplyr)
